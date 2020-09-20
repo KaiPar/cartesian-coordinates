@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<style>
+    .center {
+        text-align: center;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .txt {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: x-large;
+    }
+    .chart {
+        width: 1000px;
+        height: 700px;
+        display: block;
+        margin: 0 auto; 
+        padding-top: 0%;       
+    }
+</style>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<html>
+    <head>
+        <title>Co-ordinates</title>
+    </head>
+    
+    <body>
+        <h1 class="center">Co-ordintes Visualizer</h1>
+        <div>
+            <p class="txt">
+                x: <input type="number" step="0.001" name="x" id = "x"> 
+                y: <input type="number" step="0.001" name="y" id = "y">           
+                <br />
+                <br />
+                minVal: <input type="number" step="0.001" name="min" id = "min">
+                <br />
+                <br />
+                <input type="button" onclick="updateData()" style="font-size: large;" value="Add">                
+            </p>
+        </div>
+        <hr />
+        <div id="chart_div" class="chart"></div>  
+    </body>
+</html>
+
+<script>
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(plotData);     
+
+    var X = [];
+    var Y = [];
+
+    function updateData() {
+        var x = document.getElementById("x").value;
+        var y = document.getElementById("y").value;
+        var maxPos = document.getElementById("min").value;
+        var minPos = -1*maxPos;
+        
+        X.push(x);
+        Y.push(y);
+
+        var rows = [];
+
+        rows.push(["X", "(x,y)"])
+
+        for (var i = 0; i < X.length; i++) {
+
+            var arr = [];
+            arr.push(parseFloat(X[i]));
+            arr.push(parseFloat(Y[i]));
+            rows.push(arr);
+
+        }
+
+        plotData(rows, minPos, maxPos);
+
+    }
+
+    function plotData(rows, minVal, maxVal) { 
+        console.log(rows);
+        var data = google.visualization.arrayToDataTable(rows);
+        var options = {
+            title: "Cartesian Co-ordinates",
+            hAxis: {title: 'X', minValue: minVal, maxValue: maxVal},
+            vAxis: {title: 'Y', minValue: minVal, maxValue: maxVal},
+            legend: 'none'
+        };
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+
+
+
+</script>
